@@ -1,0 +1,48 @@
+use django , tailwind ,alpine js ,sqllite in local ,pgsql in production
+
+create a "RamJaap" web app , user can type ram naam , select timer 5m ,10 m , 15 min ,30 min ,60 min ,also can select number to type as ram jaap like 10000 times , 100000 times give option in user 
+can view top devotee ,create very good looking landing page
+
+user can login check all japp user did in past,
+on home page show ladder board
+
+
+after loin open  a text form  that take input and count , count =1 when some one type "ram" or "Ram"
+
+then when submit it store in his account , 
+
+
+so any one ligin and start writeing Ram Ram Ram 
+
+
+in his dashbaord show total number of Ram Count 
+also on home page public show number of user & 
+
+total numbers of Total ram Written by users
+
+
+ask question if concept is not clear
+give option to write ram  naam ( user can type ram ram in a form )
+auto convert any input buy user in "Ram" , input can be ram,rAm,RAM,rAM,RaM AND MANY INPUTS (CHECK)
+
+also take input in hindi too.
+
+
+correction 
+i want to by default opend form for ram nam input , move counter of ram nam on 2nd page "count" , current page only show user input form fetures ,also i want text transfom featers and i want i use typr ram  auto space apllied not need to press space button 
+
+
+update :
+time option & Jaap Target will be as  button , move on top of input form , Ram Naam couter move to above input form (make big bold - in center ) , time oprion ,jaap target & couter will be in line just abobe input form .
+
+
+all user userinterface ll be very easy as so non technical also use this app easyly 
+
+most be mobile respinshive ,
+users be able to pause and resume their Jaap sessions , when user submit 
+its store in traget and in next session user can continue and so on .
+
+2nd phase :
+there be social sharing features for users to share their achievements.
+there be different user levels/badges based on Jaap counts.
+we need to implement notifications when users reach their targets

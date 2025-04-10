@@ -1,0 +1,55 @@
+# This file is used to reduce cursor AI load
+# It contains file patterns that should be ignored by Cursor
+
+# Virtual environment
+venv/
+env/
+.env/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Database
+*.sqlite3
+db.sqlite3
+
+# Static files (usually collected to a single directory)
+staticfiles/
+static/admin/
+
+# Media files
+media/
+
+# Node modules (if using npm for Tailwind)
+node_modules/
+
+# Log files
+*.log
+
+# Backup files
+*.bak
+
+# IDE-specific files
+.vscode/
+.idea/
+
+# Local development settings
+local_settings.py
+
+# Coverage reports
+htmlcov/
+.coverage
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# Temporary files
+*.swp
+*.swo
+*~
+
+# Git
+.git/ 

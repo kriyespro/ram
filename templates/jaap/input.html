@@ -1,0 +1,318 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ram Naam Jaap - RamJaap{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('jaapApp', () => ({
+            jaapText: '',
+            ramCount: {{ active_session.ram_count|default:0 }},
+            sessionId: {{ active_session.id|default:0 }},
+            selectedTimer: '{{ active_session.timer_set|default:"" }}',
+            selectedTarget: '{{ active_session.target_count|default:"" }}',
+            timeLeft: null,
+            timerInterval: null,
+            targetReached: false,
+            status: '{{ active_session.status|default:"in_progress" }}',
+            isInputting: true,
+            isSubmitting: false,
+            
+            init() {
+                // Set up timer if active
+                if (this.selectedTimer && this.status === 'in_progress') {
+                    this.startTimer(parseInt(this.selectedTimer));
+                }
+                
+                // Check if target is reached
+                if (this.selectedTarget && parseInt(this.selectedTarget) <= this.ramCount) {
+                    this.targetReached = true;
+                }
+            },
+
+            formatTime(minutes) {
+                const mins = Math.floor(minutes);
+                const secs = Math.floor((minutes - mins) * 60);
+                return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            },
+
+            startTimer(minutes) {
+                const endTime = new Date();
+                endTime.setMinutes(endTime.getMinutes() + minutes);
+                
+                this.updateTimer(endTime);
+                
+                this.timerInterval = setInterval(() => {
+                    this.updateTimer(endTime);
+                }, 1000);
+            },
+
+            updateTimer(endTime) {
+                const now = new Date();
+                const diff = (endTime - now) / 1000 / 60; // in minutes
+                
+                if (diff <= 0) {
+                    clearInterval(this.timerInterval);
+                    this.timeLeft = '0:00';
+                    this.submitJaap('completed');
+                } else {
+                    this.timeLeft = this.formatTime(diff);
+                }
+            },
+
+            processInput() {
+                const text = this.jaapText.toLowerCase();
+                
+                // Auto-spacing
+                if (text.endsWith('ram ') || text.endsWith('ram\n')) {
+                    // Do nothing, already has space or newline
+                } else if (text.endsWith('ram')) {
+                    this.jaapText += ' ';
+                }
+                
+                // Count occurrences of "ram"
+                const ramMatches = (text.match(/\bram\b/gi) || []).length;
+                this.ramCount = ramMatches;
+                
+                // Check if target reached
+                if (this.selectedTarget && parseInt(this.selectedTarget) <= this.ramCount) {
+                    this.targetReached = true;
+                    if (this.timerInterval) {
+                        clearInterval(this.timerInterval);
+                    }
+                    
+                    // Auto submit when target is reached
+                    this.submitJaap('completed');
+                }
+            },
+
+            selectTimer(timer) {
+                this.selectedTimer = timer;
+                
+                if (timer && !this.timerInterval && this.status === 'in_progress') {
+                    this.startTimer(parseInt(timer));
+                }
+            },
+
+            selectTarget(target) {
+                this.selectedTarget = target;
+                
+                // Check if already reached
+                if (target && parseInt(target) <= this.ramCount) {
+                    this.targetReached = true;
+                } else {
+                    this.targetReached = false;
+                }
+            },
+
+            resumeJaap() {
+                this.status = 'in_progress';
+                if (this.selectedTimer) {
+                    this.startTimer(parseInt(this.selectedTimer));
+                }
+            },
+
+            submitJaap(status = 'completed') {
+                if (this.isSubmitting) return;  // Prevent multiple submissions
+                
+                this.isSubmitting = true;
+                this.status = status;
+                
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                }
+                
+                // Create form data
+                const formData = new FormData();
+                formData.append('jaap_text', this.jaapText);
+                formData.append('timer', this.selectedTimer);
+                formData.append('target', this.selectedTarget);
+                formData.append('session_id', this.sessionId);
+                formData.append('ram_count', this.ramCount);
+                formData.append('status', status);
+                formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+                
+                // Submit via AJAX
+                fetch('{% url "jaap_submit" %}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    this.isSubmitting = false;
+                    if (data.status === 'success') {
+                        this.sessionId = data.session_id;
+                        
+                        if (status === 'completed') {
+                            // Reset the form after successful submission
+                            if (this.targetReached) {
+                                window.location.href = '{% url "dashboard" %}';
+                            } else {
+                                // Clear the form and keep the target for continued jaap
+                                const currentTarget = this.selectedTarget;
+                                this.jaapText = '';
+                                this.ramCount = 0;
+                                this.targetReached = false;
+                                this.selectedTarget = currentTarget;
+                                this.status = 'in_progress';
+                                
+                                // Show success message to user
+                                alert('Your Ram Jaap has been saved successfully. You can continue toward your target.');
+                            }
+                        }
+                    } else {
+                        alert('Error saving your Ram Jaap. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    this.isSubmitting = false;
+                    alert('Error saving your Ram Jaap. Please try again.');
+                });
+            }
+        }));
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto" x-data="jaapApp">
+    <h1 class="text-3xl font-bold text-orange-600 mb-4 text-center">Ram Naam Jaap</h1>
+    
+    <!-- Ram Counter -->
+    <div class="text-center mb-6">
+        <div class="ram-counter">
+            <span x-text="ramCount">0</span>
+        </div>
+        <p class="text-gray-600">Ram Count</p>
+    </div>
+    
+    <!-- Timer and Target Options -->
+    <div class="grid grid-cols-2 gap-4 mb-8">
+        <div>
+            <h2 class="text-lg font-semibold text-orange-800 mb-2">Select Timer</h2>
+            <div class="flex flex-wrap gap-2">
+                <button type="button" @click="selectTimer('')" 
+                    :class="selectedTimer === '' ? 'bg-orange-600 text-white' : 'bg-white text-orange-600 border border-orange-600'"
+                    class="px-4 py-2 rounded-lg font-medium text-sm">
+                    No Timer
+                </button>
+                <button type="button" @click="selectTimer('5')" 
+                    :class="selectedTimer === '5' ? 'bg-orange-600 text-white' : 'bg-white text-orange-600 border border-orange-600'"
+                    class="px-4 py-2 rounded-lg font-medium text-sm">
+                    5 Minutes
+                </button>
+                <button type="button" @click="selectTimer('10')" 
+                    :class="selectedTimer === '10' ? 'bg-orange-600 text-white' : 'bg-white text-orange-600 border border-orange-600'"
+                    class="px-4 py-2 rounded-lg font-medium text-sm">
+                    10 Minutes
+                </button>
+                <button type="button" @click="selectTimer('15')" 
+                    :class="selectedTimer === '15' ? 'bg-orange-600 text-white' : 'bg-white text-orange-600 border border-orange-600'"
+                    class="px-4 py-2 rounded-lg font-medium text-sm">
+                    15 Minutes
+                </button>
+                <button type="button" @click="selectTimer('30')" 
+                    :class="selectedTimer === '30' ? 'bg-orange-600 text-white' : 'bg-white text-orange-600 border border-orange-600'"
+                    class="px-4 py-2 rounded-lg font-medium text-sm">
+                    30 Minutes
+                </button>
+                <button type="button" @click="selectTimer('60')" 
+                    :class="selectedTimer === '60' ? 'bg-orange-600 text-white' : 'bg-white text-orange-600 border border-orange-600'"
+                    class="px-4 py-2 rounded-lg font-medium text-sm">
+                    60 Minutes
+                </button>
+            </div>
+            
+            <!-- Timer Display -->
+            <div x-show="timeLeft" class="mt-2 timer-display">
+                <span x-text="timeLeft"></span>
+            </div>
+        </div>
+        
+        <div>
+            <h2 class="text-lg font-semibold text-orange-800 mb-2">Select Target</h2>
+            <div class="flex flex-wrap gap-2">
+                <button type="button" @click="selectTarget('')" 
+                    :class="selectedTarget === '' ? 'bg-orange-600 text-white' : 'bg-white text-orange-600 border border-orange-600'"
+                    class="px-4 py-2 rounded-lg font-medium text-sm">
+                    No Target
+                </button>
+                <button type="button" @click="selectTarget('108')" 
+                    :class="selectedTarget === '108' ? 'bg-orange-600 text-white' : 'bg-white text-orange-600 border border-orange-600'"
+                    class="px-4 py-2 rounded-lg font-medium text-sm">
+                    108 Times
+                </button>
+                <button type="button" @click="selectTarget('1008')" 
+                    :class="selectedTarget === '1008' ? 'bg-orange-600 text-white' : 'bg-white text-orange-600 border border-orange-600'"
+                    class="px-4 py-2 rounded-lg font-medium text-sm">
+                    1,008 Times
+                </button>
+                <button type="button" @click="selectTarget('10000')" 
+                    :class="selectedTarget === '10000' ? 'bg-orange-600 text-white' : 'bg-white text-orange-600 border border-orange-600'"
+                    class="px-4 py-2 rounded-lg font-medium text-sm">
+                    10,000 Times
+                </button>
+                <button type="button" @click="selectTarget('100000')" 
+                    :class="selectedTarget === '100000' ? 'bg-orange-600 text-white' : 'bg-white text-orange-600 border border-orange-600'"
+                    class="px-4 py-2 rounded-lg font-medium text-sm">
+                    100,000 Times
+                </button>
+            </div>
+            
+            <!-- Target Reached Message -->
+            <div x-show="targetReached" class="mt-2 text-green-600 font-semibold">
+                Target reached!
+            </div>
+        </div>
+    </div>
+    
+    <!-- Jaap Input Form -->
+    <form method="post" @submit.prevent="submitJaap('completed')" class="mb-6">
+        {% csrf_token %}
+        
+        <!-- Hidden fields -->
+        {{ form.timer }}
+        {{ form.target }}
+        {{ form.session_id }}
+        {{ form.ram_count }}
+        
+        <!-- Jaap Text Input -->
+        <div x-show="isInputting" class="mb-4">
+            {{ form.jaap_text }}
+            <p class="text-sm text-gray-500 mt-1">Type "Ram" as many times as you wish. The counter will automatically track each occurrence.</p>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="flex justify-center mt-6 space-x-4">
+            <button type="button" @click="resumeJaap()" x-show="status === 'paused'" 
+                class="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition">
+                Resume
+            </button>
+            
+            <button type="submit" 
+                class="px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg shadow-md hover:bg-orange-700 transition"
+                :disabled="isSubmitting">
+                <span x-show="!isSubmitting">Save Ram Jaap</span>
+                <span x-show="isSubmitting">Saving...</span>
+            </button>
+        </div>
+    </form>
+    
+    <!-- Instructions -->
+    <div class="bg-white rounded-lg shadow-md p-6 border border-orange-100">
+        <h2 class="text-xl font-semibold text-orange-800 mb-2">Instructions</h2>
+        <ol class="list-decimal list-inside space-y-2 text-gray-700">
+            <li>Type "Ram" in the text area above. The counter will automatically track each occurrence.</li>
+            <li>You can optionally set a timer or target count for your Jaap session.</li>
+            <li>Auto-spacing is enabled - after typing "Ram", a space will be automatically added.</li>
+            <li>Click Save Ram Jaap button when you're finished to save your progress.</li>
+            <li>Your progress will be saved and you can continue toward your target in your next session.</li>
+        </ol>
+    </div>
+</div>
+{% endblock %} 

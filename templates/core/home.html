@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}RamJaap - Digital Ram Naam Jaap{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+    <!-- Hero Section -->
+    <div class="flex flex-col justify-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-orange-600 mb-4">Digital Ram Naam Jaap</h1>
+        <p class="text-lg text-gray-700 mb-6">
+            Welcome to RamJaap, a platform for devotees to perform digital Ram Naam Jaap. Type Lord Ram's name repeatedly
+            as a spiritual practice, track your progress, and join a community of devotees.
+        </p>
+        {% if user.is_authenticated %}
+            <div class="flex space-x-4">
+                <a href="{% url 'jaap_input' %}" class="px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg shadow-md hover:bg-orange-700 transition">Start Jaap</a>
+                <a href="{% url 'dashboard' %}" class="px-6 py-3 bg-white text-orange-600 border border-orange-600 font-semibold rounded-lg hover:bg-orange-50 transition">My Dashboard</a>
+            </div>
+        {% else %}
+            <div class="flex space-x-4">
+                <a href="{% url 'login' %}" class="px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg shadow-md hover:bg-orange-700 transition">Login</a>
+                <a href="{% url 'register' %}" class="px-6 py-3 bg-white text-orange-600 border border-orange-600 font-semibold rounded-lg hover:bg-orange-50 transition">Register</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Statistics Card -->
+    <div class="bg-white rounded-xl shadow-lg p-6 border border-orange-200">
+        <h2 class="text-2xl font-bold text-orange-800 mb-4">Global Statistics</h2>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="bg-orange-50 rounded-lg p-4 text-center">
+                <p class="text-gray-600 mb-2">Total Users</p>
+                <p class="text-3xl font-bold text-orange-600">{{ total_users }}</p>
+            </div>
+            <div class="bg-orange-50 rounded-lg p-4 text-center">
+                <p class="text-gray-600 mb-2">Total Ram Naam</p>
+                <p class="text-3xl font-bold text-orange-600">{{ total_ram_count }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="mt-16">
+    <h2 class="text-3xl font-bold text-orange-800 mb-8 text-center">Features</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white rounded-lg shadow-md p-6 border border-orange-100">
+            <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-orange-800 mb-2">Timer Options</h3>
+            <p class="text-gray-600">Set timers for 5, 10, 15, 30, or 60 minutes for your Ram Naam Jaap sessions.</p>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-6 border border-orange-100">
+            <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-orange-800 mb-2">Target Counting</h3>
+            <p class="text-gray-600">Set targets like 10,000 or 100,000 repetitions and track your progress over time.</p>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-6 border border-orange-100">
+            <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-orange-800 mb-2">Pause & Resume</h3>
+            <p class="text-gray-600">Pause your Jaap sessions anytime and resume later to continue your spiritual practice.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Leaderboard Section -->
+<div class="mt-16">
+    <h2 class="text-3xl font-bold text-orange-800 mb-8 text-center">Top Devotees</h2>
+    <div class="bg-white rounded-lg shadow-md overflow-hidden border border-orange-200">
+        <table class="min-w-full">
+            <thead>
+                <tr class="bg-orange-100">
+                    <th class="py-3 px-4 text-left font-semibold text-orange-800">Rank</th>
+                    <th class="py-3 px-4 text-left font-semibold text-orange-800">User</th>
+                    <th class="py-3 px-4 text-left font-semibold text-orange-800">Ram Count</th>
+                    <th class="py-3 px-4 text-left font-semibold text-orange-800">Sessions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for profile in top_users %}
+                <tr class="leaderboard-row">
+                    <td class="py-3 px-4">{{ forloop.counter }}</td>
+                    <td class="py-3 px-4">{{ profile.user.username }}</td>
+                    <td class="py-3 px-4">{{ profile.total_ram_count }}</td>
+                    <td class="py-3 px-4">{{ profile.total_sessions }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="py-8 text-center text-gray-500">No users have performed Ram Jaap yet. Be the first!</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4 text-center">
+        <a href="{% url 'leaderboard' %}" class="text-orange-600 hover:text-orange-800 font-medium">View Full Leaderboard →</a>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Leaderboard - RamJaap{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto">
+    <h1 class="text-3xl font-bold text-orange-600 mb-6">Ram Naam Jaap Leaderboard</h1>
+    
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow-md p-6 border border-orange-100">
+            <h2 class="text-xl font-semibold text-orange-800 mb-2">Total Users</h2>
+            <p class="text-4xl font-bold text-orange-600">{{ total_users }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-6 border border-orange-100">
+            <h2 class="text-xl font-semibold text-orange-800 mb-2">Total Ram Naam Count</h2>
+            <p class="text-4xl font-bold text-orange-600">{{ total_ram_count }}</p>
+        </div>
+    </div>
+    
+    <!-- Leaderboard Table -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden border border-orange-200">
+        <div class="bg-orange-100 px-6 py-4">
+            <h2 class="text-xl font-semibold text-orange-800">Top Devotees</h2>
+        </div>
+        <div class="p-6">
+            {% if top_users %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="border-b border-orange-200">
+                                <th class="py-3 px-4 text-left font-semibold text-orange-800">Rank</th>
+                                <th class="py-3 px-4 text-left font-semibold text-orange-800">User</th>
+                                <th class="py-3 px-4 text-left font-semibold text-orange-800">Ram Count</th>
+                                <th class="py-3 px-4 text-left font-semibold text-orange-800">Sessions</th>
+                                <th class="py-3 px-4 text-left font-semibold text-orange-800">Average per Session</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for profile in top_users %}
+                            <tr class="leaderboard-row">
+                                <td class="py-3 px-4">{{ forloop.counter }}</td>
+                                <td class="py-3 px-4">{{ profile.user.username }}</td>
+                                <td class="py-3 px-4">{{ profile.total_ram_count }}</td>
+                                <td class="py-3 px-4">{{ profile.total_sessions }}</td>
+                                <td class="py-3 px-4">
+                                    {% if profile.total_sessions > 0 %}
+                                        {{ profile.total_ram_count|divisibleby:profile.total_sessions|floatformat:0 }}
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-gray-500 py-4 text-center">No users have performed Ram Jaap yet. Be the first!</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if not user.is_authenticated %}
+    <!-- Call to Action -->
+    <div class="mt-8 text-center">
+        <p class="text-lg text-gray-700 mb-4">Join the community and start your spiritual journey today!</p>
+        <div class="flex justify-center space-x-4">
+            <a href="{% url 'register' %}" class="px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg shadow-md hover:bg-orange-700 transition">Register</a>
+            <a href="{% url 'login' %}" class="px-6 py-3 bg-white text-orange-600 border border-orange-600 font-semibold rounded-lg hover:bg-orange-50 transition">Login</a>
+        </div>
+    </div>
+    {% else %}
+    <!-- Start Jaap CTA -->
+    <div class="mt-8 text-center">
+        <a href="{% url 'jaap_input' %}" class="px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg shadow-md hover:bg-orange-700 transition">Start Jaap</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

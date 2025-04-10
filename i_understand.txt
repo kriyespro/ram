@@ -1,0 +1,65 @@
+# RamJaap Project Understanding
+
+## Technology Stack
+- Backend: Django (Python 3.12)
+- Frontend: Tailwind CSS for styling, Alpine.js for interactivity
+- Database: SQLite for local development, PostgreSQL for production
+
+## Project Overview
+RamJaap is a web application for devotees to perform digital "Ram Naam Jaap" (repetitive chanting of Lord Ram's name). Users can type "Ram" multiple times as a spiritual practice, with the application tracking their progress and achievements.
+
+## Core Features (Phase 1)
+
+### User Authentication
+- User registration and login
+- Personal dashboard to track Jaap history
+
+### Jaap Functionality
+- Input form where users can type "Ram" repeatedly
+- Counter that increments each time "Ram" is typed
+- Auto-conversion of any variation of "ram" (RAM, rAm, etc.) to "Ram"
+- Auto-spacing feature (no need to press the space button)
+- Timer options: 5, 10, 15, 30, 60 minutes
+- Jaap target options: 10,000 times, 100,000 times, etc.
+- Support for Hindi input for "Ram Naam"
+- Pause and resume Jaap sessions functionality
+- Session persistence (store progress in target and allow continuation in next session)
+
+### UI Components
+- Default view: Ram Naam input form
+- Ram Naam counter displayed prominently above input form (big, bold, centered)
+- Time options, Jaap target buttons, and counter in a single line above the input form
+- Separate "count" page to display the counter
+- Leaderboard ("ladder board") showing top devotees on home page
+- Dashboard showing user's total Ram Naam count and history
+- Very good looking landing page with intuitive interface
+- Simple and easy-to-use interface for non-technical users
+- Mobile responsive design
+
+### Statistics
+- Public display of total number of users
+- Total Ram Naam count across all users
+
+### User Flow
+- User logs in
+- Form opens by default for Ram Naam input
+- User selects timer/target options
+- User types "Ram" repeatedly (with auto-spacing)
+- Submission stores count in user's account
+- User can view personal statistics and overall leaderboard
+
+## Phase 2 Features
+- Social sharing features for users to share their achievements
+- Different user levels/badges based on Jaap counts
+- Notifications when users reach their targets
+
+## Admin Configuration
+- Change Django default admin path from /admin to /durga
+- Create a custom dashboard at /admin with full admin control
+- Change Django default branding to app name
+
+## Questions for Clarification:
+1. Are there any specific security requirements for user data?
+2. Are there specific design requirements for the badges/user levels in Phase 2?
+3. What kind of notifications should be implemented (email, in-app, push)?
+4. Are there any reporting or analytics features needed for administrators? 

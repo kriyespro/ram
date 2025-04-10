@@ -1,0 +1,90 @@
+/* Custom styles for RamJaap */
+
+/* Message styles */
+.success {
+    background-color: #f0fdf4;
+    border-left: 4px solid #22c55e;
+    color: #166534;
+}
+
+.error {
+    background-color: #fef2f2;
+    border-left: 4px solid #ef4444;
+    color: #991b1b;
+}
+
+.warning {
+    background-color: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    color: #92400e;
+}
+
+.info {
+    background-color: #eff6ff;
+    border-left: 4px solid #3b82f6;
+    color: #1e40af;
+}
+
+/* Ram Jaap counter display */
+.ram-counter {
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+    color: #c2410c;
+}
+
+/* Timer styles */
+.timer-display {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4b5563;
+    text-align: center;
+}
+
+/* Target options styles */
+.target-option.active {
+    background-color: #ea580c;
+    color: white;
+}
+
+/* Timer options styles */
+.timer-option.active {
+    background-color: #ea580c;
+    color: white;
+}
+
+/* Jaap input area */
+.jaap-input {
+    min-height: 150px;
+    border: 2px solid #f97316;
+    border-radius: 0.5rem;
+    resize: none;
+    padding: 1rem;
+    background-color: #fff7ed;
+    transition: border-color 0.3s ease;
+}
+
+.jaap-input:focus {
+    outline: none;
+    border-color: #ea580c;
+    box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.2);
+}
+
+/* Leaderboard styles */
+.leaderboard-row:nth-child(even) {
+    background-color: #ffedd5;
+}
+
+.leaderboard-row:hover {
+    background-color: #fed7aa;
+}
+
+/* Dashboard cards */
+.dashboard-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+} 

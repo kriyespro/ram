@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }} - RamJaap Admin{% endblock %}
+
+{% block extra_css %}
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" 
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+    .admin-sidebar {
+        width: 280px;
+        background-color: #1e293b;
+        color: #f8fafc;
+        height: 100%;
+        position: fixed;
+        top: 72px;
+        left: 0;
+        overflow-y: auto;
+        z-index: 10;
+    }
+    
+    .admin-content {
+        margin-left: 280px;
+        padding: 2rem;
+    }
+    
+    .sidebar-link {
+        display: block;
+        padding: 1rem 1.5rem;
+        color: #f8fafc;
+        border-left: 4px solid transparent;
+        transition: all 0.3s ease;
+    }
+    
+    .sidebar-link:hover, .sidebar-link.active {
+        background-color: #334155;
+        border-left-color: #ea580c;
+    }
+    
+    .sidebar-heading {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        padding: 1rem 1.5rem 0.5rem;
+        color: #94a3b8;
+    }
+    
+    .stat-card {
+        background-color: white;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    }
+    
+    .stat-card:hover {
+        box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.1);
+    }
+    
+    .stat-value {
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: #1e293b;
+    }
+    
+    .stat-label {
+        font-size: 1rem;
+        color: #64748b;
+        font-weight: 500;
+    }
+    
+    .stat-icon {
+        font-size: 2rem;
+        color: #ea580c;
+    }
+    
+    .admin-card {
+        background-color: white;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        margin-bottom: 1.5rem;
+    }
+    
+    .admin-card-header {
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .admin-table th {
+        text-align: left;
+        padding: 0.75rem 1rem;
+        border-bottom: 2px solid #e2e8f0;
+        color: #64748b;
+        font-weight: 600;
+    }
+    
+    .admin-table td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .admin-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .admin-table tr:hover {
+        background-color: #f8fafc;
+    }
+    
+    @media (max-width: 1024px) {
+        .admin-sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+            top: 0;
+        }
+        
+        .admin-content {
+            margin-left: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-col lg:flex-row min-h-screen">
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+        <div class="py-4">
+            <h1 class="text-xl font-bold px-6 mb-4">RamJaap Admin</h1>
+            
+            <div class="sidebar-heading">Dashboard</div>
+            <a href="{% url 'admin_dashboard:dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <i class="fas fa-tachometer-alt mr-2"></i> Overview
+            </a>
+            
+            <div class="sidebar-heading">Management</div>
+            <a href="{% url 'admin_dashboard:users' %}" class="sidebar-link {% if request.resolver_match.url_name == 'users' %}active{% endif %}">
+                <i class="fas fa-users mr-2"></i> Users
+            </a>
+            <a href="{% url 'admin_dashboard:jaap_stats' %}" class="sidebar-link {% if request.resolver_match.url_name == 'jaap_stats' %}active{% endif %}">
+                <i class="fas fa-chart-line mr-2"></i> Jaap Statistics
+            </a>
+            
+            <div class="sidebar-heading">System</div>
+            <a href="{% url 'admin_dashboard:system_info' %}" class="sidebar-link {% if request.resolver_match.url_name == 'system_info' %}active{% endif %}">
+                <i class="fas fa-server mr-2"></i> System Info
+            </a>
+            <a href="/durga/" class="sidebar-link" target="_blank">
+                <i class="fas fa-cogs mr-2"></i> Django Admin
+            </a>
+            
+            <div class="sidebar-heading">Navigation</div>
+            <a href="/" class="sidebar-link">
+                <i class="fas fa-home mr-2"></i> Back to Site
+            </a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="admin-content flex-1">
+        <div class="container mx-auto">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">{{ page_title }}</h1>
+                <p class="text-gray-600">Admin Dashboard</p>
+            </div>
+            
+            {% block admin_content %}{% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% block admin_js %}{% endblock %}
+{% endblock %} 

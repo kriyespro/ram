@@ -1,0 +1,48 @@
+# RamJaap Demo User Details
+
+## Admin User
+- Username: admin
+- Email: admin@ramjaap.com
+- Password: admin123
+
+## Test Regular Users
+
+### User 1
+- Username: devotee1
+- Email: devotee1@example.com
+- Password: ramjaap123
+- Total Ram Count: 5000
+- Sessions Completed: 10
+
+### User 2
+- Username: devotee2
+- Email: devotee2@example.com
+- Password: ramjaap123
+- Total Ram Count: 12500
+- Sessions Completed: 25
+
+### User 3
+- Username: devotee3
+- Email: devotee3@example.com
+- Password: ramjaap123
+- Total Ram Count: 2000
+- Sessions Completed: 5
+
+### User 4
+- Username: devotee4
+- Email: devotee4@example.com
+- Password: ramjaap123
+- Total Ram Count: 50000
+- Sessions Completed: 50
+
+### User 5
+- Username: devotee5
+- Email: devotee5@example.com
+- Password: ramjaap123
+- Total Ram Count: 7500
+- Sessions Completed: 15
+
+# Usage Instructions
+1. Use these accounts for testing the application functionality
+2. Login with any user to test the Ram Jaap feature
+3. Login with admin to access the admin dashboard at /durga 

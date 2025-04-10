@@ -1,0 +1,166 @@
+{% extends 'admin_dashboard/base.html' %}
+{% load static %}
+{% load dashboard_extras %}
+
+{% block admin_content %}
+<!-- Overall Stats -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="stat-card">
+        <div class="flex justify-between">
+            <div>
+                <div class="stat-value">{{ total_sessions }}</div>
+                <div class="stat-label">Total Sessions</div>
+            </div>
+            <div class="stat-icon">
+                <i class="fas fa-history"></i>
+            </div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="flex justify-between">
+            <div>
+                <div class="stat-value">{{ total_ram_count|default:"0" }}</div>
+                <div class="stat-label">Total Ram Count</div>
+            </div>
+            <div class="stat-icon">
+                <i class="fas fa-pray"></i>
+            </div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="flex justify-between">
+            <div>
+                <div class="stat-value">{{ avg_rams_per_session }}</div>
+                <div class="stat-label">Avg Ram per Session</div>
+            </div>
+            <div class="stat-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Time-based Stats -->
+<div class="admin-card mb-8">
+    <div class="admin-card-header">
+        <h2 class="text-xl font-semibold text-gray-800">Time-based Statistics</h2>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Daily Stats -->
+        <div class="bg-gray-50 p-4 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Today</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <div class="text-xl font-bold text-gray-800">{{ today_sessions }}</div>
+                    <div class="text-sm text-gray-600">Sessions</div>
+                </div>
+                <div>
+                    <div class="text-xl font-bold text-gray-800">{{ today_ram_count }}</div>
+                    <div class="text-sm text-gray-600">Ram Count</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Weekly Stats -->
+        <div class="bg-gray-50 p-4 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">This Week</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <div class="text-xl font-bold text-gray-800">{{ weekly_sessions }}</div>
+                    <div class="text-sm text-gray-600">Sessions</div>
+                </div>
+                <div>
+                    <div class="text-xl font-bold text-gray-800">{{ weekly_ram_count }}</div>
+                    <div class="text-sm text-gray-600">Ram Count</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Monthly Stats -->
+        <div class="bg-gray-50 p-4 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">This Month</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <div class="text-xl font-bold text-gray-800">{{ monthly_sessions }}</div>
+                    <div class="text-sm text-gray-600">Sessions</div>
+                </div>
+                <div>
+                    <div class="text-xl font-bold text-gray-800">{{ monthly_ram_count }}</div>
+                    <div class="text-sm text-gray-600">Ram Count</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Insights -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Platform Growth -->
+    <div class="admin-card">
+        <div class="admin-card-header">
+            <h2 class="text-xl font-semibold text-gray-800">Platform Growth</h2>
+        </div>
+        <div class="p-4">
+            <p class="text-gray-700 mb-4">
+                The platform has accumulated a total of <span class="font-bold">{{ total_ram_count }}</span> Ram counts across <span class="font-bold">{{ total_sessions }}</span> sessions.
+            </p>
+            
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="text-lg font-semibold text-gray-700 mb-2">Growth Insights</h3>
+                <ul class="list-disc pl-5 space-y-2 text-gray-600">
+                    {% if today_sessions > 0 %}
+                    <li>Today's activity: {{ today_ram_count }} Ram counts ({{ today_sessions }} sessions)</li>
+                    {% endif %}
+                    {% if weekly_sessions > 0 %}
+                    <li>This week's activity: {{ weekly_ram_count }} Ram counts ({{ weekly_sessions }} sessions)</li>
+                    {% endif %}
+                    {% if monthly_sessions > 0 %}
+                    <li>This month's activity: {{ monthly_ram_count }} Ram counts ({{ monthly_sessions }} sessions)</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- User Engagement -->
+    <div class="admin-card">
+        <div class="admin-card-header">
+            <h2 class="text-xl font-semibold text-gray-800">User Engagement</h2>
+        </div>
+        <div class="p-4">
+            <p class="text-gray-700 mb-4">
+                On average, users complete <span class="font-bold">{{ avg_rams_per_session }}</span> Ram counts per session.
+            </p>
+            
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="text-lg font-semibold text-gray-700 mb-2">Engagement Insights</h3>
+                <ul class="list-disc pl-5 space-y-2 text-gray-600">
+                    <li>More than {{ total_sessions }} sessions have been completed on the platform</li>
+                    {% if weekly_sessions > 0 and today_sessions > 0 %}
+                    <li>{{ today_sessions }} out of {{ weekly_sessions }} weekly sessions occurred today {% if weekly_sessions > 0 %}({{ today_sessions|floatformat:0|multiply:100|divide:weekly_sessions|floatformat:0 }}%){% endif %}</li>
+                    {% endif %}
+                    <li>Visit the <a href="{% url 'leaderboard' %}" class="text-orange-600 hover:underline">Leaderboard</a> to see the most engaged users</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Actions -->
+<div class="admin-card mt-6">
+    <div class="admin-card-header">
+        <h2 class="text-xl font-semibold text-gray-800">Admin Actions</h2>
+    </div>
+    <div class="p-4 flex flex-wrap gap-4">
+        <a href="/durga/jaap/jaapsession/" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition" target="_blank">
+            <i class="fas fa-history mr-2"></i> Manage Sessions
+        </a>
+        <a href="/durga/jaap/jaapcount/" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition" target="_blank">
+            <i class="fas fa-calculator mr-2"></i> Manage Counts
+        </a>
+    </div>
+</div>
+{% endblock %} 

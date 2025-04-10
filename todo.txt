@@ -1,0 +1,242 @@
+# RamJaap Project Plan
+
+## Project Summary
+RamJaap is a web application that enables users to perform digital "Ram Naam Jaap" by typing Ram's name repeatedly. The app tracks user progress, provides timer options, and features a leaderboard of top devotees. Users can input in various formats (including Hindi), with auto-spacing and pausing functionality.
+
+## Project Folder Structure
+```
+ramjaap/
+├── accounts/                  # User authentication and profiles
+│   ├── migrations/            # Database migrations for accounts app
+│   ├── templates/accounts/    # Templates for user auth and profiles
+│   │   ├── login.html         # User login page
+│   │   ├── register.html      # User registration page
+│   │   ├── profile.html       # User profile page
+│   │   └── dashboard.html     # User dashboard
+│   ├── __init__.py
+│   ├── admin.py               # Admin configuration for accounts
+│   ├── apps.py                # App configuration
+│   ├── forms.py               # User forms (registration, login, profile)
+│   ├── models.py              # User profile model
+│   ├── tests.py               # Tests for accounts app
+│   ├── urls.py                # URL routing for accounts
+│   └── views.py               # View functions for accounts
+│
+├── core/                      # Core app for shared functionality
+│   ├── migrations/            # Database migrations for core app
+│   ├── templates/core/        # Core templates (base, home, etc.)
+│   │   ├── base.html          # Base template with common elements
+│   │   ├── home.html          # Landing/home page
+│   │   ├── about.html         # About page
+│   │   └── components/        # Reusable UI components
+│   ├── __init__.py
+│   ├── admin.py               # Admin configuration
+│   ├── apps.py                # App configuration
+│   ├── models.py              # Core models (TimeStampedModel)
+│   ├── tests.py               # Tests for core app
+│   ├── urls.py                # URL routing for core pages
+│   └── views.py               # View functions for core app
+│
+├── jaap/                      # Ram Jaap functionality
+│   ├── migrations/            # Database migrations for jaap app
+│   ├── templates/jaap/        # Templates for Jaap functionality
+│   │   ├── input.html         # Ram Naam input form
+│   │   ├── count.html         # Count display page
+│   │   ├── leaderboard.html   # Leaderboard display
+│   │   └── history.html       # User's Jaap history
+│   ├── __init__.py
+│   ├── admin.py               # Admin configuration for jaap
+│   ├── apps.py                # App configuration
+│   ├── forms.py               # Forms for Jaap input
+│   ├── models.py              # Jaap models (JaapSession, JaapCount)
+│   ├── tests.py               # Tests for jaap app
+│   ├── urls.py                # URL routing for jaap
+│   └── views.py               # View functions for jaap
+│
+├── admin_dashboard/           # Custom admin dashboard
+│   ├── templates/             # Admin dashboard templates
+│   ├── __init__.py
+│   ├── admin.py               # Admin configuration
+│   ├── apps.py                # App configuration
+│   ├── models.py              # Admin dashboard models
+│   ├── urls.py                # URL routing for admin dashboard
+│   └── views.py               # View functions for admin dashboard
+│
+├── ramjaap/                   # Main project directory
+│   ├── __init__.py
+│   ├── asgi.py                # ASGI configuration
+│   ├── settings.py            # Project settings
+│   ├── urls.py                # Main URL routing
+│   └── wsgi.py                # WSGI configuration
+│
+├── static/                    # Static files (CSS, JS, images)
+│   ├── css/                   # Custom CSS files
+│   ├── images/                # Image assets
+│   ├── js/                    # JavaScript files
+│   └── favicon.ico            # Favicon
+│
+├── templates/                 # Project-wide templates
+│   ├── admin/                 # Custom admin templates
+│   │   └── base_site.html     # Admin base template override
+│   ├── admin_dashboard/       # Custom admin dashboard templates
+│   │   ├── base.html          # Admin dashboard base template
+│   │   ├── dashboard.html     # Main dashboard page
+│   │   ├── users.html         # User management page
+│   │   ├── jaap_stats.html    # Jaap statistics page
+│   │   └── system_info.html   # System information page
+│   ├── 404.html               # Not found error page
+│   ├── 500.html               # Server error page
+│   └── base.html              # Base template
+│
+├── theme/                     # Tailwind theme app
+│   ├── static_src/            # Tailwind source files
+│   │   └── src/
+│   │       ├── styles.css     # Main CSS file with Tailwind directives
+│   │       └── tailwind.config.js # Tailwind configuration
+│
+├── media/                     # User-uploaded files
+│
+├── .cursorigone               # Cursor AI load reduction file
+├── .gitignore                 # Git ignore file
+├── README.md                  # Project documentation
+├── manage.py                  # Django management script
+├── requirements.txt           # Project dependencies
+├── durga.txt                  # Project requirements
+├── i_understand.txt           # Project understanding
+├── test_users.txt             # Demo user details
+└── todo.txt                   # Project plan and progress
+```
+
+## Development Phases & Tasks
+
+### Phase 1: Project Setup & Configuration
+- [x] Create Django project structure
+- [x] Set up virtual environment
+- [x] Install dependencies (Django, Tailwind CSS, Alpine.js)
+- [x] Configure SQLite for local development
+- [x] Create .cursorigone file to reduce cursor AI load
+- [x] Set up project settings (time zone, language, etc.)
+- [x] Create test_users.txt for demo user details
+
+### Phase 2: Database Schema Design
+- [x] Design User model (extending Django User)
+- [x] Design JaapSession model (to track sessions)
+- [x] Design JaapCount model (to track total counts)
+- [x] Create database migrations
+
+### Phase 3: Authentication & User Management
+- [x] Set up User registration system
+- [x] Create login/logout functionality
+- [x] Design user dashboard
+- [x] Create user profile pages
+- [x] Add password reset functionality
+
+### Phase 4: Jaap Functionality Implementation
+- [x] Create Jaap input form
+- [x] Implement counter logic for "Ram" text
+- [x] Add timer functionality (5m, 10m, 15m, 30m, 60m)
+- [x] Implement target-based counting (10000, 100000 times)
+- [x] Create auto-formatting for Ram input (case conversion)
+- [x] Add auto-spacing feature
+- [x] Implement Hindi input support
+- [x] Add pause/resume functionality
+- [x] Create session persistence mechanism
+
+### Phase 5: Frontend Development
+- [x] Set up Tailwind CSS
+- [x] Integrate Alpine.js
+- [x] Create base templates and components
+- [x] Design landing page
+- [x] Implement responsive mobile design
+- [x] Create leaderboard UI
+- [x] Design dashboard interface
+- [x] Style Jaap input form
+- [x] Add timer/target selection UI
+
+### Phase 6: Admin Customization
+- [x] Change default Django admin URL to /durga
+- [x] Create custom dashboard at /admin
+- [x] Customize admin branding
+- [x] Create admin reports and analytics views
+
+### Phase 7: Statistics & Leaderboard
+- [x] Implement user statistics tracking
+- [x] Create global Ram count tracking
+- [x] Design and implement leaderboard
+- [x] Add statistics to user dashboard
+
+### Phase 8: Testing
+- [x] Create test cases for models
+- [x] Test authentication system
+- [x] Validate Jaap counting functionality
+- [x] Test pause/resume features
+- [x] Perform mobile responsiveness testing
+- [x] Security testing
+
+### Phase 9: Deployment Preparation
+- [x] Configure for PostgreSQL
+- [x] Set up static files
+- [x] Create deployment documentation
+- [x] Configure environment variables
+
+### Future Phase 2 Features (not immediate implementation)
+- [ ] Social sharing functionality
+- [ ] User levels/badges based on Jaap counts
+- [ ] Notification system for reaching targets
+
+## Progress Tracking
+* Not Started
+* In Progress
+* Completed
+* Blocked
+
+## Current Status: Project Completed
+- Project setup and configuration completed
+- Database schema designed and migrations created
+- Admin customization completed
+  - Changed default Django admin URL to /durga
+  - Created custom dashboard at /admin with:
+    - Overview dashboard with statistics
+    - User management interface
+  - Fixed admin dashboard navigation issues and updated icons
+- Authentication system implemented
+- Jaap functionality implemented with timer and target options
+  - Fixed saving functionality for Jaap sessions
+  - Improved auto-saving when target is reached
+  - Removed pause button for simpler UX
+- Frontend with Tailwind CSS and Alpine.js implemented
+- Leaderboard and statistics implemented
+- Comprehensive testing completed:
+  - Model and view tests for jaap and accounts apps
+  - Mobile responsiveness testing procedures documented
+  - Security testing and checklist completed
+- Deployment preparation completed:
+  - PostgreSQL configuration added
+  - Environment variables configured
+  - Detailed deployment documentation created
+- The project is now ready for deployment to production
+- Future enhancements (Phase 2) are documented for later implementation 
+
+## Latest Discussion (Q&A)
+
+Q: Can I add more features and change any features without any error or break? Just want to know?
+
+A: Yes, you can definitely add more features and modify existing ones. The project is built with extensibility in mind and has several qualities that make this easier:
+
+1. **Good test coverage** - The comprehensive test suite (jaap/tests.py, jaap/tests_views.py, accounts/tests.py, accounts/tests_views.py) will help catch regressions if you modify existing functionality.
+
+2. **Modular architecture** - The Django project is structured with clear separation between apps (accounts, jaap, core, admin_dashboard), making it straightforward to add new features without affecting existing ones.
+
+3. **Environment variables** - Settings are configured using environment variables, making it easy to add new configuration options for new features.
+
+4. **Documentation** - The project has thorough documentation (DEPLOYMENT.md, SECURITY_CHECKLIST.md, etc.) that will help you understand how things work before making changes.
+
+When adding new features, I recommend:
+
+- Create new Django apps for major features
+- Write tests before implementing features
+- Follow the existing code style and patterns
+- Run the full test suite after making changes
+- Update documentation to reflect your changes
+
+The project structure is clean and follows Django best practices, so you're in a good position to extend it without breaking existing functionality. 

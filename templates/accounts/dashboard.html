@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Dashboard - RamJaap{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto">
+    <h1 class="text-3xl font-bold text-orange-600 mb-6">My Dashboard</h1>
+    
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow-md p-6 border border-orange-100 dashboard-card">
+            <h2 class="text-xl font-semibold text-orange-800 mb-2">Total Ram Count</h2>
+            <p class="text-4xl font-bold text-orange-600">{{ total_ram_count }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-6 border border-orange-100 dashboard-card">
+            <h2 class="text-xl font-semibold text-orange-800 mb-2">Total Sessions</h2>
+            <p class="text-4xl font-bold text-orange-600">{{ total_sessions }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-6 border border-orange-100 dashboard-card">
+            <h2 class="text-xl font-semibold text-orange-800 mb-2">Ram per Session</h2>
+            <p class="text-4xl font-bold text-orange-600">
+                {% if total_sessions > 0 %}
+                    {{ total_ram_count|divisibleby:total_sessions|floatformat:0 }}
+                {% else %}
+                    0
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    
+    <!-- Action Button -->
+    <div class="text-center mb-8">
+        <a href="{% url 'jaap_input' %}" class="px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg shadow-md hover:bg-orange-700 transition">Start New Jaap Session</a>
+    </div>
+    
+    <!-- Recent Sessions -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden border border-orange-200 mb-8">
+        <div class="bg-orange-100 px-6 py-4">
+            <h2 class="text-xl font-semibold text-orange-800">Recent Jaap Sessions</h2>
+        </div>
+        <div class="p-6">
+            {% if recent_sessions %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="border-b border-orange-200">
+                                <th class="py-2 px-4 text-left font-semibold text-orange-800">Date</th>
+                                <th class="py-2 px-4 text-left font-semibold text-orange-800">Ram Count</th>
+                                <th class="py-2 px-4 text-left font-semibold text-orange-800">Timer</th>
+                                <th class="py-2 px-4 text-left font-semibold text-orange-800">Target</th>
+                                <th class="py-2 px-4 text-left font-semibold text-orange-800">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for session in recent_sessions %}
+                            <tr class="border-b border-orange-100">
+                                <td class="py-3 px-4">{{ session.created_at|date:"M d, Y H:i" }}</td>
+                                <td class="py-3 px-4">{{ session.ram_count }}</td>
+                                <td class="py-3 px-4">
+                                    {% if session.timer_set %}
+                                        {{ session.timer_set }} minutes
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 px-4">
+                                    {% if session.target_count %}
+                                        {{ session.target_count }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 px-4">
+                                    {% if session.status == 'in_progress' %}
+                                        <span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded">In Progress</span>
+                                    {% elif session.status == 'paused' %}
+                                        <span class="inline-block px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded">Paused</span>
+                                    {% else %}
+                                        <span class="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded">Completed</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-gray-500 py-4 text-center">You haven't completed any Jaap sessions yet.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- All Sessions -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden border border-orange-200">
+        <div class="bg-orange-100 px-6 py-4 flex justify-between items-center">
+            <h2 class="text-xl font-semibold text-orange-800">All Jaap Sessions</h2>
+        </div>
+        <div class="p-6">
+            {% if all_sessions %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="border-b border-orange-200">
+                                <th class="py-2 px-4 text-left font-semibold text-orange-800">Date</th>
+                                <th class="py-2 px-4 text-left font-semibold text-orange-800">Ram Count</th>
+                                <th class="py-2 px-4 text-left font-semibold text-orange-800">Timer</th>
+                                <th class="py-2 px-4 text-left font-semibold text-orange-800">Target</th>
+                                <th class="py-2 px-4 text-left font-semibold text-orange-800">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for session in all_sessions %}
+                            <tr class="border-b border-orange-100">
+                                <td class="py-3 px-4">{{ session.created_at|date:"M d, Y H:i" }}</td>
+                                <td class="py-3 px-4">{{ session.ram_count }}</td>
+                                <td class="py-3 px-4">
+                                    {% if session.timer_set %}
+                                        {{ session.timer_set }} minutes
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 px-4">
+                                    {% if session.target_count %}
+                                        {{ session.target_count }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 px-4">
+                                    {% if session.status == 'in_progress' %}
+                                        <span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded">In Progress</span>
+                                        <a href="{% url 'jaap_resume' session.id %}" class="text-xs text-blue-600 hover:underline ml-2">Resume</a>
+                                    {% elif session.status == 'paused' %}
+                                        <span class="inline-block px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded">Paused</span>
+                                        <a href="{% url 'jaap_resume' session.id %}" class="text-xs text-blue-600 hover:underline ml-2">Resume</a>
+                                    {% else %}
+                                        <span class="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded">Completed</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-gray-500 py-4 text-center">You haven't completed any Jaap sessions yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 
